@@ -101,10 +101,10 @@ def handler(event, context):
                             result['policy0'] += 1 #Add one to our policy fail counter
                             result["errors"].append("policy0: Port range {}-{} in not allowed for /0".format(rule["FromPort"],rule["ToPort"]))
                             
-                        # if rule["FromPort"] in DB_PORTS and rule["ToPort"] in DB_PORTS:
-                        #     result['pass'] = False
-                        #     result['policy0'] += 1
-                        #     result['errors'].append('policy0: You need to be a part of WebServerSecurityGroup to use ports {} {}'.format(rule['FromPort'], rule['ToPort']))
+                        if rule["FromPort"] in DB_PORTS and rule["ToPort"] in DB_PORTS:
+                            result['pass'] = False
+                            result['policy0'] += 1
+                            result['errors'].append('policy0: You need to be a part of WebServerSecurityGroup to use ports {} {}'.format(rule['FromPort'], rule['ToPort']))
                     if 'SourceSecurityGroupName' in rule:
                         if rule["FromPort"] in DB_PORTS and rule["ToPort"] in DB_PORTS and rule["SourceSecurityGroupName"] != 'WebServerSecurityGroup':
                             result['pass'] = False
@@ -133,7 +133,7 @@ def handler(event, context):
                             if 'Statement' in policyDocument:
                                 for statement in policyDocument['Statement']:
                                     if statement['Effect'] == 'Allow':
-                                        if statement['Action'] == 'iam:*' or statement['Action'] == 'organizations:*' or statement['Action'] == '*':
+                                        if 'iam:' in statement['Action'] or 'organizations:' in statement['Action'] or statement['Action'] == '*':
                                             result['pass'] = False
                                             result['policy1'] += 1
                                             result['errors'].append('policy1: iam namespace not allowed')
@@ -142,7 +142,7 @@ def handler(event, context):
             if "Properties" in cfn['Resources'][resource]:
                 if "ManagedPolicyArns" in cfn['Resources'][resource]['Properties']:
                     for policy in cfn['Resources'][resource]['Properties']['ManagedPolicyArns']:
-                        if "AWSSupportAccess" in policy or "SupportAccess" in policy or "CloudWatch" in policy:
+                        if "AWSSupportAccess" not in policy and "SupportAccess" not in policy and "CloudWatch" not in policy:
                             result['pass'] = False
                             result['policy1'] += 1
                             result['errors'].append('policy1: only Support or CloudWatch policies allowed')
