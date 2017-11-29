@@ -170,18 +170,6 @@ def handler(event, context):
                     result['pass'] = False
                     result['policy2'] += 1
                     result['errors'].append('policy2: The resource {} have to be created with tags for Name, Role, Owner & CostCenter'.format(cfn['Resources'][resource]))
-                    result['pass'] = False
-                    result['policy2'] += 1
-                    result['errors'].append('policy2: The resource {} have to be created with tags for Name'.format(cfn['Resources'][resource]))
-                    result['pass'] = False
-                    result['policy2'] += 1
-                    result['errors'].append('policy2: The resource {} have to be created with tags for Role'.format(cfn['Resources'][resource]))
-                    result['pass'] = False
-                    result['policy2'] += 1
-                    result['errors'].append('policy2: The resource {} have to be created with tags for Owner'.format(cfn['Resources'][resource]))
-                    result['pass'] = False
-                    result['policy2'] += 1
-                    result['errors'].append('policy2: The resource {} have to be created with tags for CostCenter'.format(cfn['Resources'][resource]))
 
         # SUBRULE 2 Any EC2 has to have tags for Name, Role, Owner & CostCenter
         if cfn['Resources'][resource]["Type"] == """AWS::EC2::Instance""":
