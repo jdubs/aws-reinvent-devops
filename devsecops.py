@@ -81,7 +81,7 @@ def handler(event, context):
     #Now we loop over resources in the template, looking for policy breaches
     for resource in cfn['Resources']:
         #Test for Security Groups for Unicorn Security policy0
-        # SUBRULE 1
+        ############# POLICY 0 ######
         if cfn['Resources'][resource]["Type"] == """AWS::EC2::SecurityGroup""":
             if "SecurityGroupIngress" in cfn['Resources'][resource]["Properties"]:
                 for rule in cfn['Resources'][resource]["Properties"]['SecurityGroupIngress']:
@@ -122,6 +122,22 @@ def handler(event, context):
                         result['pass'] = False
                         result['policy0'] += 1
                         result['errors'].append('policy0: S3 buckets cannot have {} AccessControl'.format(cfn['Resources'][resource]['Properties']['AccessControl']))
+
+        ########## POLICY 1 ########
+        if cfn['Resources'][resource]["Type"] == """AWS::IAM::User""":
+            if "Properties" in cfn['Resources'][resource]:
+                if "Policies" in cfn['Resources'][resource]['Properties']:
+                    for policy in cfn['Resources'][resource]['Properties']['Policies']:
+                        if 'PolicyDocument' in policy:
+                            policyDocument = policy['PolicyDocument']
+                            if 'Statement' in policyDocument:
+                                for statement in policyDocument['Statement']:
+                                    if statement['Effect'] == 'Allow':
+                                        if statement['Action'] == 'iam:*' or statement['Action'] == 'organizations:*' or statement['Action'] == '*':
+                                            result['pass'] = False
+                                            result['policy1'] += 1
+                                            result['errors'].append('policy1: iam namespace not allowed')
+
      
     ########################YOUR CODE GOES ABOVE HERE########################
     # Now, how did we do? We need to return accurate statics of any policy failures.
@@ -133,3 +149,10 @@ def handler(event, context):
     else:
         send_slack("Passed DevSecOps static code analysis Security Testing", username="SecurityBotPASS", emoji=":white_check_mark:")
     return result
+
+
+if __name__ == "__main__":
+    import sys
+
+    result = handler(json.load(open(sys.argv[1])), None)
+    print(result)
