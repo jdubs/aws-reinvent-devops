@@ -138,6 +138,14 @@ def handler(event, context):
                                             result['policy1'] += 1
                                             result['errors'].append('policy1: iam namespace not allowed')
 
+        #Policy 2. Monitoring and Logging#
+        # SUBRULE 1 Any ELB and CloudFront have to be created with logging enabled.
+        if cfn['Resources'][resource]["Type"] == """AWS::ElasticLoadBalancing::LoadBalancer""":
+            if "Properties" in cfn['Resources'][resource]:
+                if "AccessLoggingPolicy" not in cfn['Resources'][resource]["Properties"]:
+                    result['pass'] = False
+                    result['policy2'] += 1
+                    result['errors'].append('policy2: The resource {} have to be created with logging enabled'.format(cfn['Resources'][resource]))
      
     ########################YOUR CODE GOES ABOVE HERE########################
     # Now, how did we do? We need to return accurate statics of any policy failures.
