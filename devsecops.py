@@ -161,7 +161,7 @@ def handler(event, context):
                 if "AccessLoggingPolicy" not in cfn['Resources'][resource]["Properties"]:
                     result['pass'] = False
                     result['policy2'] += 1
-                    result['errors'].append('policy2: The resource {} have to be created with logging enabled'.format(cfn['Resources'][resource]))
+                    result['errors'].append('policy2: The resource have to be created with logging enabled')
 
         # SUBRULE 2 Any EC2 has to have tags for Name, Role, Owner & CostCenter
         if cfn['Resources'][resource]["Type"] == """AWS::EC2::Instance""":
@@ -169,7 +169,7 @@ def handler(event, context):
                 if "Tags" not in cfn['Resources'][resource]["Properties"]:
                     result['pass'] = False
                     result['policy2'] += 1
-                    result['errors'].append('policy2: The resource {} have to be created with tags for Name, Role, Owner & CostCenter'.format(cfn['Resources'][resource]))
+                    result['errors'].append('policy2: The resource have to be created with tags for Name, Role, Owner & CostCenter')
 
         # SUBRULE 2 Any EC2 has to have tags for Name, Role, Owner & CostCenter
         if cfn['Resources'][resource]["Type"] == """AWS::EC2::Instance""":
@@ -178,7 +178,7 @@ def handler(event, context):
                     if "Name" not in cfn['Resources'][resource]['Properties']['Tags']:
                         result['pass'] = False
                         result['policy2'] += 1
-                        result['errors'].append('policy2: The resource {} have to be created with tags for Name'.format(cfn['Resources'][resource]))
+                        result['errors'].append('policy2: The resource have to be created with tags for Name')
 
         if cfn['Resources'][resource]["Type"] == """AWS::EC2::Instance""":
             if "Properties" in cfn['Resources'][resource]:
@@ -186,7 +186,7 @@ def handler(event, context):
                     if "Role" not in cfn['Resources'][resource]['Properties']['Tags']:
                         result['pass'] = False
                         result['policy2'] += 1
-                        result['errors'].append('policy2: The resource {} have to be created with tags for Role'.format(cfn['Resources'][resource]))
+                        result['errors'].append('policy2: The resource have to be created with tags for Role')
 
         if cfn['Resources'][resource]["Type"] == """AWS::EC2::Instance""":
             if "Properties" in cfn['Resources'][resource]:
@@ -194,7 +194,7 @@ def handler(event, context):
                     if "Owner" not in cfn['Resources'][resource]['Properties']['Tags']:
                         result['pass'] = False
                         result['policy2'] += 1
-                        result['errors'].append('policy2: The resource {} have to be created with tags for Owner'.format(cfn['Resources'][resource]))
+                        result['errors'].append('policy2: The resource have to be created with tags for Owner')
 
         if cfn['Resources'][resource]["Type"] == """AWS::EC2::Instance""":
             if "Properties" in cfn['Resources'][resource]:
@@ -202,7 +202,7 @@ def handler(event, context):
                     if "CostCenter" not in cfn['Resources'][resource]['Properties']['Tags']:
                         result['pass'] = False
                         result['policy2'] += 1
-                        result['errors'].append('policy2: The resource {} have to be created with tags for CostCenter'.format(cfn['Resources'][resource]))
+                        result['errors'].append('policy2: The resource have to be created with tags for CostCenter')
     
     ########################YOUR CODE GOES ABOVE HERE########################
     # Now, how did we do? We need to return accurate statics of any policy failures.
